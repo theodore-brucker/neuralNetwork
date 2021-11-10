@@ -2,17 +2,26 @@ import numpy as np
 
 class NeuralNetwork():
 
+    #Sets our random seed and creates random synaptic values based off of it1
     def __init__(self):
         np.random.seed(1)
 
         self.synaptic_weights = 2 * np.random.random((3, 1)) - 1
 
+    #Returns the "normalized" version of x 
+    #Between 0 and 1 using a logarithmic function
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
 
+    #Takes in a normalized value and recreates the original
+    #I.E. reverts the conversion done in the sigmoid function
     def sigmoid_derivative(self, x):
         return x * (1 - x)
 
+    #Loops as many times as desired with training_iterations
+        #Uses think function to calculate error
+        #Multiplies the inputs by the ( error by the output ) to decide the adjustments
+        #Adjusts the synaptic weights by the adjustments
     def train(self, training_inputs, training_outputs, training_iterations):
         for interation in range(training_iterations):
             
@@ -21,6 +30,8 @@ class NeuralNetwork():
             adjustments = np.dot(training_inputs.T, error * self.sigmoid_derivative(output))
             self.synaptic_weights += adjustments
 
+    #Gets all the normalized values and multiplies them by their weights
+    #Returning an array output containing all new weighted values after "thinking"
     def think(self, inputs):
         inputs = inputs.astype(float)
         output = self.sigmoid(np.dot(inputs, self.synaptic_weights))
